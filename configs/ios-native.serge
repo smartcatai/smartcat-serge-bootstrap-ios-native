@@ -1,0 +1,68 @@
+sync
+{
+    ts
+    {
+        @inherit                                common.serge.inc#common-settings/ts
+
+        data
+        {
+            # Project ID to synchronize data with.
+            # To get the ID, navigate to the target project and take it's ID from the URL.
+            # For example, if the URL is
+            # https://us.smartcat.ai/projects/01234567-890a-bcde-f012-34567890abcd/files?documentPage=1
+            # then the ID will be 01234567-890a-bcde-f012-34567890abcd
+            project_id                          01234567-890a-bcde-f012-34567890abcd
+        }
+    }
+
+    vcs
+    {
+        @inherit                                common.serge.inc#common-settings/vcs
+
+        data
+        {
+            local_path                          ../vcs/ios-native
+            remote_path                         ssh://username@git-server.local/ios-native.git
+        }
+    }
+}
+
+inc
+{
+    common
+    {
+        db_namespace                            ios-native
+
+        destination_languages                   de ru
+
+        source_dir                              ../vcs/ios-native/en.lproj
+        output_file_path                        ../vcs/ios-native/%LANG%.lproj/%FILE%
+
+        ts_file_path                            ../ts/ios-native/%LANG%/%FILE%.po
+    }
+}
+
+jobs
+{
+    :strings
+    {
+        @inherit                                common.serge.inc#common-settings/job
+                                                ios-native.serge.inc#common-settings/job
+                                                ios-native.serge.inc#common-settings/strings
+                                                .#inc/common
+
+        name                                    Localize .strings files for project 'ios-native'
+        id                                      ios-native.strings
+    }
+
+    :plist
+    {
+        @inherit                                common.serge.inc#common-settings/job
+                                                ios-native.serge.inc#common-settings/job
+                                                ios-native.serge.inc#common-settings/plist
+                                                .#inc/common
+
+        name                                    Localize .plist files for project 'ios-native'
+        id                                      ios-native.plist
+    }
+}
